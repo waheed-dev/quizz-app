@@ -1,5 +1,5 @@
 import React from "react";
-import {actionType} from "../App.tsx";
+import {actionType, Status} from "../App.tsx";
 
 interface StartScreenProps {
     data : {
@@ -13,7 +13,7 @@ interface StartScreenProps {
 
 export const StartScreen: React.FC<StartScreenProps> = ({data, dispatch}) => {
     const handleStart = () => {
-        dispatch({type: 'active'})
+        dispatch({type: Status.active})
     }
     return (
         <div className={'text-white flex flex-col items-center mt-10 gap-5'}>

@@ -7,25 +7,29 @@ import Loader from "./components/Loader.tsx";
 import {StartScreen} from "./components/StartScreen.tsx";
 import Questions from "./components/Questions.tsx";
 
-enum Status {
+export enum Status {
     loading = 'loading',
     ready = 'ready',
     error = 'error',
-    active = 'active'
+    active = 'active',
+    finished = 'finished'
 }
 
 interface ReducerState {
-    data : {
-        question : string
-        options : []
-        correctOption : number
-        points : number
+    data: {
+        question: string
+        options: []
+        correctOption: number
+        points: number
     }[]
     status: Status
-    index : number
+    index: number
+    score: number
 }
 
-export type actionType = { type: 'fetch', payload: [] } | { type: 'error' } | {type : 'active'} | {type : 'next'} | {type : 'prev'}
+export type actionType = { type: 'fetch', payload: [] } | { type: Status.error } | { type: Status.active } | { type: 'next' } | {
+    type: 'prev'
+} | { type: 'addScore', payload: number } | {type : Status.finished}
 const reducer = (state: ReducerState, action: actionType) => {
     switch (action.type) {
         case 'fetch' :
@@ -35,9 +39,13 @@ const reducer = (state: ReducerState, action: actionType) => {
         case "active":
             return {...state, status: Status.active}
         case "next" :
-         return {...state, index: state.index + 1}
+            return {...state, index: state.index + 1}
         case "prev" :
-            return {...state, index : state.index - 1}
+            return {...state, index: state.index - 1}
+        case "addScore" :
+        return {...state,score :state.score + action.payload}
+        case Status.finished :
+            return {...state,status: Status.finished}
         default :
             return state
     }
@@ -46,21 +54,20 @@ const reducer = (state: ReducerState, action: actionType) => {
 const initialState: ReducerState = {
     index: 0,
     data: [],
-    status: Status.loading
-
+    status: Status.loading,
+    score: 0
 }
 
 function App() {
 
-    const [{data,status,index}, dispatch] = useReducer(reducer, initialState)
+    const [{data, status, index, score}, dispatch] = useReducer(reducer, initialState)
     useEffect(() => {
         axios.get('http://localhost:8000/questions').then(res => {
             dispatch({type: 'fetch', payload: res.data})
         }).catch((e: Error | AxiosError) => {
-            dispatch({type: 'error'})
+            dispatch({type: Status.error})
             console.log(e)
         })
-
     }, []);
     console.log(data)
     return (
@@ -70,7 +77,7 @@ function App() {
                 {status === 'loading' ? <Loader/> : ''}
                 {status === 'error' ? <div>Error Loading Data</div> : ''}
                 {status === 'ready' ? <StartScreen dispatch={dispatch} data={data}/> : ''}
-                {status === 'active' ? <Questions data={data} dispatch={dispatch} index={index}/> : ''}
+                {status === 'active' || status === 'finished' ? <Questions data={data} dispatch={dispatch} status={status} score={score} index={index}/> : ''}
             </Main>
         </div>
     )
