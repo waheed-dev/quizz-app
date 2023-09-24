@@ -1,8 +1,13 @@
-import React, {Dispatch} from "react";
+import React from "react";
 import {actionType} from "../App.tsx";
 
 interface StartScreenProps {
-    data: []
+    data : {
+        question : string
+        options : []
+        correctOption : number
+        points : number
+    }[]
     dispatch: (action : actionType) => void
 }
 

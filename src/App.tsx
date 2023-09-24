@@ -15,8 +15,14 @@ enum Status {
 }
 
 interface ReducerState {
-    data: []
+    data : {
+        question : string
+        options : []
+        correctOption : number
+        points : number
+    }[]
     status: Status
+    index : number
 }
 
 export type actionType = { type: 'fetch', payload: [] } | { type: 'error' } | {type : 'active'}
@@ -34,13 +40,15 @@ const reducer = (state: ReducerState, action: actionType) => {
 }
 
 const initialState: ReducerState = {
+    index: 0,
     data: [],
     status: Status.loading
+
 }
 
 function App() {
 
-    const [{data,status}, dispatch] = useReducer(reducer, initialState)
+    const [{data,status,index}, dispatch] = useReducer(reducer, initialState)
     useEffect(() => {
         axios.get('http://localhost:8000/questions').then(res => {
             dispatch({type: 'fetch', payload: res.data})
@@ -58,7 +66,7 @@ function App() {
                 {status === 'loading' ? <Loader/> : ''}
                 {status === 'error' ? <div>Error Loading Data</div> : ''}
                 {status === 'ready' ? <StartScreen dispatch={dispatch} data={data}/> : ''}
-                {status === 'active' ? <Questions data={data}/> : ''}
+                {status === 'active' ? <Questions data={data} index={index}/> : ''}
             </Main>
         </div>
     )
