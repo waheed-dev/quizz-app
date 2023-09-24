@@ -3,6 +3,8 @@ import Header from "./components/Header.tsx";
 import Main from "./components/Main.tsx";
 import {useEffect, useReducer} from "react";
 import axios, {AxiosError} from "axios";
+import Loader from "./components/Loader.tsx";
+import {StartScreen} from "./components/StartScreen.tsx";
 
 enum Status {
     loading = 'loading',
@@ -25,7 +27,6 @@ const reducer = (state: ReducerState, action: actionType) => {
         default :
             return state
     }
-
 }
 
 const initialState: ReducerState = {
@@ -35,7 +36,7 @@ const initialState: ReducerState = {
 
 function App() {
 
-    const [state, dispatch] = useReducer(reducer, initialState)
+    const [{data,status}, dispatch] = useReducer(reducer, initialState)
     useEffect(() => {
         axios.get('http://localhost:8000/questions').then(res => {
             dispatch({type: 'fetch', payload: res.data})
@@ -45,11 +46,15 @@ function App() {
         })
 
     }, []);
-    console.log(state.data)
+    console.log(data)
     return (
-        <div className={'bg-gray-900'}>
+        <div className={'flex flex-col items-center h-screen'}>
             <Header/>
-            <Main>asd</Main>
+            <Main>
+                {status === 'loading' ? <Loader/> : ''}
+                {status === 'error' ? <div>Error Loading Data</div> : ''}
+                {status === 'ready' ? <StartScreen data={data}/> : ''}
+            </Main>
         </div>
     )
 }

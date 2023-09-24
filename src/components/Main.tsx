@@ -6,7 +6,7 @@ interface MainProps {
 
 const Main: React.FC<MainProps> = ({children}) => {
     return (
-        <main>
+        <main className={''}>
             {children}
         </main>
     );
