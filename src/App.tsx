@@ -25,7 +25,7 @@ interface ReducerState {
     index : number
 }
 
-export type actionType = { type: 'fetch', payload: [] } | { type: 'error' } | {type : 'active'}
+export type actionType = { type: 'fetch', payload: [] } | { type: 'error' } | {type : 'active'} | {type : 'next'} | {type : 'prev'}
 const reducer = (state: ReducerState, action: actionType) => {
     switch (action.type) {
         case 'fetch' :
@@ -34,6 +34,10 @@ const reducer = (state: ReducerState, action: actionType) => {
             return {...state, status: Status.error}
         case "active":
             return {...state, status: Status.active}
+        case "next" :
+         return {...state, index: state.index + 1}
+        case "prev" :
+            return {...state, index : state.index - 1}
         default :
             return state
     }
@@ -66,7 +70,7 @@ function App() {
                 {status === 'loading' ? <Loader/> : ''}
                 {status === 'error' ? <div>Error Loading Data</div> : ''}
                 {status === 'ready' ? <StartScreen dispatch={dispatch} data={data}/> : ''}
-                {status === 'active' ? <Questions data={data} index={index}/> : ''}
+                {status === 'active' ? <Questions data={data} dispatch={dispatch} index={index}/> : ''}
             </Main>
         </div>
     )
