@@ -5,11 +5,13 @@ import {useEffect, useReducer} from "react";
 import axios, {AxiosError} from "axios";
 import Loader from "./components/Loader.tsx";
 import {StartScreen} from "./components/StartScreen.tsx";
+import Questions from "./components/Questions.tsx";
 
 enum Status {
     loading = 'loading',
     ready = 'ready',
-    error = 'error'
+    error = 'error',
+    active = 'active'
 }
 
 interface ReducerState {
@@ -17,13 +19,15 @@ interface ReducerState {
     status: Status
 }
 
-type actionType = { type: 'fetch', payload: [] } | { type: 'error' }
+export type actionType = { type: 'fetch', payload: [] } | { type: 'error' } | {type : 'active'}
 const reducer = (state: ReducerState, action: actionType) => {
     switch (action.type) {
         case 'fetch' :
             return {...state, data: action.payload, status: Status.ready}
         case "error":
             return {...state, status: Status.error}
+        case "active":
+            return {...state, status: Status.active}
         default :
             return state
     }
@@ -53,7 +57,8 @@ function App() {
             <Main>
                 {status === 'loading' ? <Loader/> : ''}
                 {status === 'error' ? <div>Error Loading Data</div> : ''}
-                {status === 'ready' ? <StartScreen data={data}/> : ''}
+                {status === 'ready' ? <StartScreen dispatch={dispatch} data={data}/> : ''}
+                {status === 'active' ? <Questions data={data}/> : ''}
             </Main>
         </div>
     )
