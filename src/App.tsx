@@ -6,13 +6,15 @@ import axios, {AxiosError} from "axios";
 import Loader from "./components/Loader.tsx";
 import {StartScreen} from "./components/StartScreen.tsx";
 import Questions from "./components/Questions.tsx";
+import Result from "./components/Result.tsx";
 
 export enum Status {
     loading = 'loading',
     ready = 'ready',
     error = 'error',
     active = 'active',
-    finished = 'finished'
+    finished = 'finished',
+    result = 'result'
 }
 
 interface ReducerState {
@@ -27,9 +29,11 @@ interface ReducerState {
     score: number
 }
 
-export type actionType = { type: 'fetch', payload: [] } | { type: Status.error } | { type: Status.active } | { type: 'next' } | {
-    type: 'prev'
-} | { type: 'addScore', payload: number } | {type : Status.finished}
+export type actionType = { type: 'fetch', payload: [] } | { type: Status.error } | { type: Status.active } | {
+    type: 'next'
+} | {
+    type: 'res'
+} | { type: 'addScore', payload: number } | { type: Status.finished } | { type: Status.result }
 const reducer = (state: ReducerState, action: actionType) => {
     switch (action.type) {
         case 'fetch' :
@@ -40,12 +44,14 @@ const reducer = (state: ReducerState, action: actionType) => {
             return {...state, status: Status.active}
         case "next" :
             return {...state, index: state.index + 1}
-        case "prev" :
-            return {...state, index: state.index - 1}
+        case "res" :
+            return {...state, index: 0, score: 0, status: Status.active}
         case "addScore" :
-        return {...state,score :state.score + action.payload}
+            return {...state, score: state.score + action.payload}
         case Status.finished :
-            return {...state,status: Status.finished}
+            return {...state, status: Status.finished}
+        case Status.result :
+            return {...state, status: Status.result}
         default :
             return state
     }
@@ -70,6 +76,13 @@ function App() {
         })
     }, []);
     console.log(data)
+    useEffect(() => {
+        if (index === (data.length - 1) && status === Status.finished) {
+            setTimeout(() => {
+                dispatch({type: Status.result})
+            }, 2000);
+        }
+    }, [data.length, index, status]);
     return (
         <div className={'flex flex-col items-center h-screen'}>
             <Header/>
@@ -77,7 +90,9 @@ function App() {
                 {status === 'loading' ? <Loader/> : ''}
                 {status === 'error' ? <div>Error Loading Data</div> : ''}
                 {status === 'ready' ? <StartScreen dispatch={dispatch} data={data}/> : ''}
-                {status === 'active' || status === 'finished' ? <Questions data={data} dispatch={dispatch} status={status} score={score} index={index}/> : ''}
+                {status === 'active' || status === 'finished' ?
+                    <Questions data={data} dispatch={dispatch} status={status} score={score} index={index}/> : ''}
+                {status === Status.result ? <Result/> : null}
             </Main>
         </div>
     )
