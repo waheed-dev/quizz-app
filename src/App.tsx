@@ -27,13 +27,15 @@ interface ReducerState {
     status: Status
     index: number
     score: number
+    correctAnswers : number
+    wrongAnswers : number
 }
 
 export type actionType = { type: 'fetch', payload: [] } | { type: Status.error } | { type: Status.active } | {
     type: 'next'
 } | {
     type: 'res'
-} | { type: 'addScore', payload: number } | { type: Status.finished } | { type: Status.result }
+} | { type: 'addScore', payload: number } | { type: Status.finished } | { type: Status.result } | {type : 'correctAnswer'} | {type : 'wrongAnswer'}
 const reducer = (state: ReducerState, action: actionType) => {
     switch (action.type) {
         case 'fetch' :
@@ -52,6 +54,10 @@ const reducer = (state: ReducerState, action: actionType) => {
             return {...state, status: Status.finished}
         case Status.result :
             return {...state, status: Status.result}
+        case "correctAnswer":
+            return {...state, correctAnswers : state.correctAnswers + 1}
+        case "wrongAnswer":
+            return {...state, wrongAnswers : state.wrongAnswers + 1}
         default :
             return state
     }
@@ -61,12 +67,14 @@ const initialState: ReducerState = {
     index: 0,
     data: [],
     status: Status.loading,
-    score: 0
+    score: 0,
+    correctAnswers : 0,
+    wrongAnswers : 0
 }
 
 function App() {
 
-    const [{data, status, index, score}, dispatch] = useReducer(reducer, initialState)
+    const [{data, status, index, score,correctAnswers,wrongAnswers}, dispatch] = useReducer(reducer, initialState)
     useEffect(() => {
         axios.get('http://localhost:8000/questions').then(res => {
             dispatch({type: 'fetch', payload: res.data})
@@ -92,7 +100,7 @@ function App() {
                 {status === 'ready' ? <StartScreen dispatch={dispatch} data={data}/> : ''}
                 {status === 'active' || status === 'finished' ?
                     <Questions data={data} dispatch={dispatch} status={status} score={score} index={index}/> : ''}
-                {status === Status.result ? <Result/> : null}
+                {status === Status.result ? <Result data={data} correctAnswer={correctAnswers} wrongAnswer={wrongAnswers} score={score}/> : null}
             </Main>
         </div>
     )
