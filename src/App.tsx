@@ -27,15 +27,19 @@ interface ReducerState {
     status: Status
     index: number
     score: number
-    correctAnswers : number
-    wrongAnswers : number
+    correctAnswers: number
+    wrongAnswers: number
+    timer : number | null
+    ProgressTrack : number | string
 }
 
 export type actionType = { type: 'fetch', payload: [] } | { type: Status.error } | { type: Status.active } | {
     type: 'next'
 } | {
     type: 'res'
-} | { type: 'addScore', payload: number } | { type: Status.finished } | { type: Status.result } | {type : 'correctAnswer'} | {type : 'wrongAnswer'}
+} | { type: 'addScore', payload: number } | { type: Status.finished } | { type: Status.result } | {
+    type: 'correctAnswer'
+} | { type: 'wrongAnswer' } | {type : 'timer'} | {type : 'ProgressTrack', payload: string }
 const reducer = (state: ReducerState, action: actionType) => {
     switch (action.type) {
         case 'fetch' :
@@ -43,11 +47,11 @@ const reducer = (state: ReducerState, action: actionType) => {
         case "error":
             return {...state, status: Status.error}
         case "active":
-            return {...state, status: Status.active}
+            return {...state, status: Status.active,timer : state.data.length * 15}
         case "next" :
             return {...state, index: state.index + 1}
         case "res" :
-            return {...state, index: 0, score: 0, status: Status.active}
+            return {...state, index: 0, score: 0, status: Status.active,timer : 20}
         case "addScore" :
             return {...state, score: state.score + action.payload}
         case Status.finished :
@@ -55,9 +59,13 @@ const reducer = (state: ReducerState, action: actionType) => {
         case Status.result :
             return {...state, status: Status.result}
         case "correctAnswer":
-            return {...state, correctAnswers : state.correctAnswers + 1}
+            return {...state, correctAnswers: state.correctAnswers + 1}
         case "wrongAnswer":
-            return {...state, wrongAnswers : state.wrongAnswers + 1}
+            return {...state, wrongAnswers: state.wrongAnswers + 1}
+        case "ProgressTrack":
+        return {...state,ProgressTrack : action.payload}
+        case "timer" :
+            return {...state,timer : state.timer! - 1,status: state.timer === 0 ? Status.result: state.status}
         default :
             return state
     }
@@ -68,13 +76,15 @@ const initialState: ReducerState = {
     data: [],
     status: Status.loading,
     score: 0,
-    correctAnswers : 0,
-    wrongAnswers : 0
+    correctAnswers: 0,
+    wrongAnswers: 0,
+    ProgressTrack : '',
+    timer : null
 }
 
 function App() {
 
-    const [{data, status, index, score,correctAnswers,wrongAnswers}, dispatch] = useReducer(reducer, initialState)
+    const [{data,timer,ProgressTrack, status, index, score, correctAnswers, wrongAnswers}, dispatch] = useReducer(reducer, initialState)
     useEffect(() => {
         axios.get('http://localhost:8000/questions').then(res => {
             dispatch({type: 'fetch', payload: res.data})
@@ -86,6 +96,7 @@ function App() {
     console.log(data)
     useEffect(() => {
         if (index === (data.length - 1) && status === Status.finished) {
+            dispatch({type : 'ProgressTrack' , payload : 'Quiz completed! Redirecting'})
             setTimeout(() => {
                 dispatch({type: Status.result})
             }, 2000);
@@ -99,8 +110,10 @@ function App() {
                 {status === 'error' ? <div>Error Loading Data</div> : ''}
                 {status === 'ready' ? <StartScreen dispatch={dispatch} data={data}/> : ''}
                 {status === 'active' || status === 'finished' ?
-                    <Questions data={data} dispatch={dispatch} status={status} score={score} index={index}/> : ''}
-                {status === Status.result ? <Result data={data} correctAnswer={correctAnswers} wrongAnswer={wrongAnswers} score={score}/> : null}
+                    <Questions timer={timer}  progressTrack={ProgressTrack} data={data} dispatch={dispatch} status={status} score={score} index={index}/> : ''}
+                {status === Status.result ?
+                    <Result data={data}  dispatch={dispatch} correctAnswer={correctAnswers} wrongAnswer={wrongAnswers}
+                            score={score}/> : null}
             </Main>
         </div>
     )

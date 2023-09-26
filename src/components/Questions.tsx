@@ -1,5 +1,6 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {actionType, Status} from "../App.tsx";
+import Timer from "./Timer.tsx";
 
 interface QuestionsProps {
     data: {
@@ -12,40 +13,48 @@ interface QuestionsProps {
     dispatch: (action: actionType) => void
     score: number
     status: Status
+    timer : number | null
+    progressTrack: number | string
 }
 
-const Questions: React.FC<QuestionsProps> = ({data, status, index, dispatch, score}) => {
-   const totalScore = Object.values(data).reduce((acc,val) => {
+const Questions: React.FC<QuestionsProps> = ({data,timer, progressTrack, status, index, dispatch, score}) => {
+    useEffect(() => {
+        dispatch({type: 'ProgressTrack', payload: `${index + 1} / ${data.length}`})
+    }, [dispatch, data.length, index]);
+    const [prog, setProg] = useState<number>(0)
+    const percentage = (prog / data.length) * 100
+    const totalScore = Object.values(data).reduce((acc, val) => {
         return acc + val.points
-    },0)
-
+    }, 0)
     const handleCorrectOption = (optionIndex: number) => {
         if (optionIndex === data[index].correctOption) {
             dispatch({type: "addScore", payload: data[index].points})
-            dispatch({type : 'correctAnswer'})
+            dispatch({type: 'correctAnswer'})
         } else {
-            dispatch({type : 'wrongAnswer'})
+            dispatch({type: 'wrongAnswer'})
         }
         dispatch({type: Status.finished})
+        setProg(prog + 1)
     }
     const handleNext = () => {
         dispatch({type: 'next'})
         dispatch({type: Status.active})
     }
     const handleRes = () => {
-
         dispatch({type: 'res'})
+
     }
-    const percentage = (index   / data.length) * 100
-    console.log(percentage)
+
+    console.log(progressTrack)
     return (
         <div className={'text-white container mt-5'}>
             <div className={'w-2/3 mx-auto'}>
                 <div className={'text-xl text-center  m-4 rounded-xl items-center'}>POINTS : {score} / {totalScore}
-                <div className="relative mb-5 h-4 rounded-full bg-gray-200">
-                    <div className="h-4 rounded-full bg-red-500" style={{width: `${percentage}%`}}></div>
-                    <span className="absolute inset-0 flex items-center justify-center text-sm font-medium text-gray-900">{index + 1} / {data.length}</span>
-                </div>
+                    <div className="relative mb-5 h-5 rounded-full bg-gray-200">
+                        <div className="h-5 rounded-full bg-red-500" style={{width: `${percentage}%`}}></div>
+                        <span
+                            className="absolute inset-0 flex items-center justify-center text-md font-medium text-gray-900">{progressTrack}</span>
+                    </div>
                 </div>
                 <p className={'text-3xl'}>{data[index].question}</p>
                 {status === Status.active ? <ul className={'w-full'}>
@@ -72,8 +81,8 @@ const Questions: React.FC<QuestionsProps> = ({data, status, index, dispatch, sco
                 <button className={'bg-green-600 py-2 px-4 disabled:opacity-60'}
                         onClick={handleNext} disabled={index === (data.length - 1) || status === Status.active}>Next
                 </button>
+                <Timer dispatch={dispatch} timer={timer}/>
             </div>
-
         </div>
     );
 };

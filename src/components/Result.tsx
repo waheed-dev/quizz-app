@@ -1,6 +1,7 @@
 import React from "react";
 import {Bar, Pie} from "react-chartjs-2";
 import { Chart, registerables } from 'chart.js';
+import {actionType} from "../App.tsx";
 Chart.register(...registerables);
 interface ResultsProps {
     correctAnswer: number
@@ -12,12 +13,16 @@ interface ResultsProps {
         correctOption: number
         points: number
     }[]
+    dispatch: (action: actionType) => void
 }
 
-const Result: React.FC<ResultsProps> = ({correctAnswer, wrongAnswer, score,data}) => {
+const Result: React.FC<ResultsProps> = ({correctAnswer,dispatch, wrongAnswer, score,data}) => {
    const totalScore=  Object.values(data).reduce((acc,val) => {
         return acc + val.points
     },0)
+    const handleRestart = () => {
+       dispatch({type : 'res'})
+    }
     const Bardata = {
         labels: [`Correct Answers ${correctAnswer}`, `Wrong Answers ${wrongAnswer}`],
         datasets: [
@@ -51,6 +56,7 @@ const Result: React.FC<ResultsProps> = ({correctAnswer, wrongAnswer, score,data}
             <Pie data={Piedata}/>
                 </div>
             </div>
+            <button onClick={handleRestart}>Restart</button>
         </div>
     )
 }
