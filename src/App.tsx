@@ -122,7 +122,7 @@ function App() {
         }
     }, [data.length, index, status]);
     return (
-        <div className={'flex flex-col items-center h-screen'}>
+        <div className={'flex flex-col items-center p-2 h-screen'}>
             <Header/>
             <Main>
                 {status === 'loading' ? <Loader/> : ''}
