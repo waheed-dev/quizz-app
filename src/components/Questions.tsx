@@ -13,11 +13,11 @@ interface QuestionsProps {
     dispatch: (action: actionType) => void
     score: number
     status: Status
-    timer : number | null
-    progressTrack: number | string
+    timer: number | null
+    progressTrack: number | string,
 }
 
-const Questions: React.FC<QuestionsProps> = ({data,timer, progressTrack, status, index, dispatch, score}) => {
+const Questions: React.FC<QuestionsProps> = ({data, timer, progressTrack, status, index, dispatch, score}) => {
     useEffect(() => {
         dispatch({type: 'ProgressTrack', payload: `${index + 1} / ${data.length}`})
     }, [dispatch, data.length, index]);
@@ -26,6 +26,15 @@ const Questions: React.FC<QuestionsProps> = ({data,timer, progressTrack, status,
     const totalScore = Object.values(data).reduce((acc, val) => {
         return acc + val.points
     }, 0)
+    useEffect(() => {
+        if (status === Status.active) {
+            const i = setInterval(() => {
+                dispatch({type : 'timeTakenForEachQuestion'})
+            },1000)
+            return () => clearInterval(i)
+        }
+        
+    }, [dispatch, status]);
     const handleCorrectOption = (optionIndex: number) => {
         if (optionIndex === data[index].correctOption) {
             dispatch({type: "addScore", payload: data[index].points})
@@ -35,6 +44,8 @@ const Questions: React.FC<QuestionsProps> = ({data,timer, progressTrack, status,
         }
         dispatch({type: Status.finished})
         setProg(prog + 1)
+        dispatch({type: 'questionTimer'})
+
     }
     const handleNext = () => {
         dispatch({type: 'next'})
@@ -45,7 +56,7 @@ const Questions: React.FC<QuestionsProps> = ({data,timer, progressTrack, status,
 
     }
 
-    console.log(progressTrack)
+
     return (
         <div className={'text-white container mt-5'}>
             <div className={'w-2/3 mx-auto'}>

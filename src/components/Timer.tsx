@@ -7,8 +7,8 @@ interface TimerProps {
 }
 
 const Timer : React.FC<TimerProps> = ({dispatch,timer}) => {
-    const mins = Math.floor(timer / 60)
-    const secounds = (timer % 60)
+    const mins = Math.floor(timer! / 60)
+    const secounds = (timer! % 60)
     useEffect(() => {
         const id = setInterval(() => {
             dispatch({type : 'timer'})
