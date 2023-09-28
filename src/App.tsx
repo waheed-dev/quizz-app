@@ -45,7 +45,7 @@ export type actionType = { type: 'fetch', payload: [] } | { type: Status.error }
 const reducer = (state: ReducerState, action: actionType) => {
     switch (action.type) {
         case 'fetch' :
-            return {...state, data: action.payload, status: Status.ready,timer: state.data.length * 15}
+            return {...state, data: action.payload, status: Status.ready}
         case "error":
             return {...state, status: Status.error}
         case "active":
