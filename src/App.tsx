@@ -84,7 +84,7 @@ const initialState: ReducerState = {
     correctAnswers: 0,
     wrongAnswers: 0,
     ProgressTrack: '',
-    timer: null,
+    timer: 500,
     timeTakenForEachQuestion : 0,
     eachQuestionTimer : []
 }
