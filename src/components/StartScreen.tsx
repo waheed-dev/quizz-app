@@ -13,7 +13,7 @@ interface StartScreenProps {
 
 export const StartScreen: React.FC<StartScreenProps> = ({data, dispatch}) => {
     const handleStart = () => {
-        dispatch({type : Status.ready})
+
         dispatch({type: Status.active})
     }
     return (

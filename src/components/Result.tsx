@@ -71,6 +71,7 @@ const Result: React.FC<ResultsProps> = ({eachQuestionTimer,correctAnswer,dispatc
 
     return (
         <div className={'text-white font-medium text-md mt-10'}>
+            <button onClick={handleRestart} >Restart</button>
             <div className={'flex w-1/2 gap-10 items-center'}>
                 <div>
                     <div className={'flex gap-4'}>
@@ -84,7 +85,7 @@ const Result: React.FC<ResultsProps> = ({eachQuestionTimer,correctAnswer,dispatc
             <div>
                 <Bar data={data2} options={options}/>
             </div>
-            <button onClick={handleRestart} >Restart</button>
+
         </div>
     )
 }
