@@ -14,15 +14,40 @@ interface ResultsProps {
         points: number
     }[]
     dispatch: (action: actionType) => void
+    eachQuestionTimer : number[]
 }
 
-const Result: React.FC<ResultsProps> = ({correctAnswer,dispatch, wrongAnswer, score,data}) => {
+const Result: React.FC<ResultsProps> = ({eachQuestionTimer,correctAnswer,dispatch, wrongAnswer, score,data}) => {
    const totalScore=  Object.values(data).reduce((acc,val) => {
         return acc + val.points
     },0)
     const handleRestart = () => {
        dispatch({type : 'res'})
     }
+    const data2 = {
+        labels: eachQuestionTimer.map((_, index) => `Question ${index + 1}`),
+        datasets: [
+            {
+                label: 'Time Taken (seconds)',
+                data: eachQuestionTimer,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+            },
+        ],
+    };
+
+    const options = {
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Time (s)',
+                },
+            },
+        },
+    };
     const Bardata = {
         labels: [`Correct Answers ${correctAnswer}`, `Wrong Answers ${wrongAnswer}`],
         datasets: [
@@ -56,7 +81,10 @@ const Result: React.FC<ResultsProps> = ({correctAnswer,dispatch, wrongAnswer, sc
             <Pie data={Piedata}/>
                 </div>
             </div>
-            <button onClick={handleRestart}>Restart</button>
+            <div>
+                <Bar data={data2} options={options}/>
+            </div>
+            <button onClick={handleRestart} >Restart</button>
         </div>
     )
 }

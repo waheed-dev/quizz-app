@@ -53,7 +53,7 @@ const reducer = (state: ReducerState, action: actionType) => {
         case "next" :
             return {...state, index: state.index + 1}
         case "res" :
-            return {...state, index: 0, score: 0, status: Status.active, timer: 20}
+            return {...state, index: 0, score: 0, status: Status.active,timer: state.data.length * 15,eachQuestionTimer : [],timeTakenForEachQuestion : 0}
         case "addScore" :
             return {...state, score: state.score + action.payload}
         case Status.finished :
@@ -101,16 +101,15 @@ function App() {
         correctAnswers,
         wrongAnswers,
         eachQuestionTimer,
-        timeTakenForEachQuestion
+        timeTakenForEachQuestion,
     }, dispatch] = useReducer(reducer, initialState)
     console.log(eachQuestionTimer,timeTakenForEachQuestion)
     useEffect(() => {
-        axios.get('http://localhost:8000/questions').then(res => {
+        axios.get('https://cyan-roan-woodpecker.glitch.me/questions').then(res => {
             dispatch({type: 'fetch', payload: res.data})
         }).catch((e: Error | AxiosError) => {
             console.log(e)
             dispatch({type: Status.error})
-
         })
     }, []);
 
@@ -133,7 +132,7 @@ function App() {
                     <Questions timer={timer} progressTrack={ProgressTrack} data={data} dispatch={dispatch}
                                status={status} score={score} index={index}/> : ''}
                 {status === Status.result ?
-                    <Result data={data} dispatch={dispatch} correctAnswer={correctAnswers} wrongAnswer={wrongAnswers}
+                    <Result eachQuestionTimer={eachQuestionTimer} data={data} dispatch={dispatch} correctAnswer={correctAnswers} wrongAnswer={wrongAnswers}
                             score={score}/> : null}
             </Main>
         </div>

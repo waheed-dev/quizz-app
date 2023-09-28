@@ -58,8 +58,8 @@ const Questions: React.FC<QuestionsProps> = ({data, timer, progressTrack, status
 
 
     return (
-        <div className={'text-white container mt-5'}>
-            <div className={'w-2/3 mx-auto'}>
+        <div className={'text-white'}>
+            <div className={' mx-auto'}>
                 <div className={'text-xl text-center  m-4 rounded-xl items-center'}>POINTS : {score} / {totalScore}
                     <div className="relative mb-5 h-5 rounded-full bg-gray-200">
                         <div className="h-5 rounded-full bg-red-500" style={{width: `${percentage}%`}}></div>
@@ -67,20 +67,22 @@ const Questions: React.FC<QuestionsProps> = ({data, timer, progressTrack, status
                             className="absolute inset-0 flex items-center justify-center text-md font-medium text-gray-900">{progressTrack}</span>
                     </div>
                 </div>
+                <div>
                 <p className={'text-3xl'}>{data[index].question}</p>
-                {status === Status.active ? <ul className={'w-full'}>
+                </div>
+                {status === Status.active ? <ul className={''}>
                     {data[index].options.map((Q, index1) => {
                         return (
                             <li key={Q} onClick={() => handleCorrectOption(index1)}
-                                className={`w-full text-xl m-4 py-3 px-2 rounded-xl bg-gray-800 hover:bg-gray-950 hover:scale-105`}>{Q}</li>
+                                className={` text-xl m-4 py-3 px-2 rounded-xl bg-gray-800 hover:bg-gray-950 hover:scale-105`}>{Q}</li>
                         )
                     })}
                 </ul> : null}
-                {status === Status.finished ? <ul className={'w-full'}>
+                {status === Status.finished ? <ul className={''}>
                     {data[index].options.map((Q, index1) => {
                         return (
                             <li key={Q}
-                                className={` w-full text-xl m-4  bg-gray-800 py-3 px-2 rounded hover:cursor-not-allowed ${data[index].correctOption === index1 ? 'bg-green-600' : 'bg-red-600'}`}>{Q}</li>
+                                className={` text-xl m-4  bg-gray-800 py-3 px-2 rounded hover:cursor-not-allowed ${data[index].correctOption === index1 ? 'bg-green-600' : 'bg-red-600'}`}>{Q}</li>
                         )
                     })}
                 </ul> : null}

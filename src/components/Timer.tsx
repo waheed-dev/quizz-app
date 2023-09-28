@@ -17,7 +17,7 @@ const Timer : React.FC<TimerProps> = ({dispatch,timer}) => {
     }, [dispatch]);
     return (
         <div>
-            <span className={'text-white'}>
+            <span className={'text-white bg-gray-800 rounded p-4'}>
                 {mins < 10 && '0'}
                 {mins}
                 :
