@@ -47,7 +47,7 @@ const reducer = (state: ReducerState, action: actionType) => {
         case 'fetch' :
             return {...state, data: action.payload, status: Status.ready}
         case "ready":
-            return {...state,timer: state.data.length * 0}
+            return {...state,timer: state.data.length * 15}
         case "error":
             return {...state, status: Status.error}
         case "active":
@@ -55,7 +55,7 @@ const reducer = (state: ReducerState, action: actionType) => {
         case "next" :
             return {...state, index: state.index + 1}
         case "res" :
-            return {...state, index: 0, score: 0, status: Status.active,timer: state.data.length * 0,eachQuestionTimer : [],timeTakenForEachQuestion : 0}
+            return {...state, index: 0, score: 0, status: Status.active,timer: state.data.length * 15,eachQuestionTimer : [],timeTakenForEachQuestion : 0}
         case "addScore" :
             return {...state, score: state.score + action.payload}
         case Status.finished :

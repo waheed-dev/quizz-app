@@ -85,7 +85,9 @@ const Result: React.FC<ResultsProps> = ({eachQuestionTimer, correctAnswer, dispa
             <div className={'w-full'}>
                 <Bar data={data2} options={options}/>
             </div>
+            <div className={'flex justify-center mt-4'}>
             <button className={'mb-4 lg:mb-0 py-4 px-2 rounded-md bg-red-500'} onClick={handleRestart}>Restart</button>
+            </div>
         </div>
 
     )
