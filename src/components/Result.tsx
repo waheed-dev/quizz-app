@@ -70,21 +70,22 @@ const Result: React.FC<ResultsProps> = ({eachQuestionTimer, correctAnswer, dispa
             },
         ],
     };
+
     return (
         <div className={'text-white font-medium text-md mt-10'}>
 
             <div className={'flex flex-col lg:flex-row w-full lg:w-1/2 gap-10 items-center'}>
-                <div className={'w-full lg:w-1/2'}>
+                <div className={'w-full'}>
                     <Bar data={Bardata}/>
                 </div>
-                <div className={'w-full lg:w-1/2'}>
+                <div className={'w-full'}>
                     <Pie data={Piedata}/>
                 </div>
             </div>
             <div className={'w-full'}>
                 <Bar data={data2} options={options}/>
             </div>
-            <button className={'mb-4 mx-auto lg:mb-0 py-4 px-2 rounded-md bg-red-500'} onClick={handleRestart}>Restart</button>
+            <button className={'mb-4 lg:mb-0 py-4 px-2 rounded-md bg-red-500'} onClick={handleRestart}>Restart</button>
         </div>
 
     )
