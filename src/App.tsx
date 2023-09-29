@@ -41,15 +41,17 @@ export type actionType = { type: 'fetch', payload: [] } | { type: Status.error }
     type: 'res'
 } | { type: 'addScore', payload: number } | { type: Status.finished } | { type: Status.result } | {
     type: 'correctAnswer'
-} | { type: 'wrongAnswer' } | { type: 'timer' } | { type: 'ProgressTrack', payload: string } | {type : 'questionTimer'} | {type : 'timeTakenForEachQuestion'}
+} | { type: 'wrongAnswer' } | { type: 'timer' } | {type : 'ready'} |{ type: 'ProgressTrack', payload: string } | {type : 'questionTimer'} | {type : 'timeTakenForEachQuestion'}
 const reducer = (state: ReducerState, action: actionType) => {
     switch (action.type) {
         case 'fetch' :
             return {...state, data: action.payload, status: Status.ready}
+        case "ready":
+            return {...state,timer: state.data.length * 15}
         case "error":
             return {...state, status: Status.error}
         case "active":
-            return {...state, status: Status.active,timer: state.data.length * 15 }
+            return {...state, status: Status.active}
         case "next" :
             return {...state, index: state.index + 1}
         case "res" :

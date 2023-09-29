@@ -72,7 +72,7 @@ const Questions: React.FC<QuestionsProps> = ({data, timer, progressTrack, status
                     {data[index].options.map((Q, index1) => {
                         return (
                             <li key={Q} onClick={() => handleCorrectOption(index1)}
-                                className={` text-xl m-4 py-3 px-2 rounded-xl bg-gray-800 hover:bg-gray-950 hover:scale-105`}>{Q}</li>
+                                className={` text-lg lg:text-xl m-4 py-3 px-2 rounded-xl bg-gray-800 hover:bg-gray-950 hover:scale-105`}>{Q}</li>
                         )
                     })}
                 </ul> : null}
@@ -80,7 +80,7 @@ const Questions: React.FC<QuestionsProps> = ({data, timer, progressTrack, status
                     {data[index].options.map((Q, index1) => {
                         return (
                             <li key={Q}
-                                className={` text-xl m-4  bg-gray-800 py-3 px-2 rounded hover:cursor-not-allowed ${data[index].correctOption === index1 ? 'bg-green-600' : 'bg-red-600'}`}>{Q}</li>
+                                className={`text-lg lg:text-xl m-4 bg-gray-800 py-3 px-2 rounded hover:cursor-not-allowed ${data[index].correctOption === index1 ? 'bg-green-600' : 'bg-red-600'}`}>{Q}</li>
                         )
                     })}
                 </ul> : null}
