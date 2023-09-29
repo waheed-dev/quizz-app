@@ -49,7 +49,7 @@ const reducer = (state: ReducerState, action: actionType) => {
         case "error":
             return {...state, status: Status.error}
         case "active":
-            return {...state, status: Status.active, }
+            return {...state, status: Status.active,timer: state.data.length * 15 }
         case "next" :
             return {...state, index: state.index + 1}
         case "res" :
@@ -84,7 +84,7 @@ const initialState: ReducerState = {
     correctAnswers: 0,
     wrongAnswers: 0,
     ProgressTrack: '',
-    timer: 500,
+    timer: null,
     timeTakenForEachQuestion : 0,
     eachQuestionTimer : []
 }

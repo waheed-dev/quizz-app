@@ -70,7 +70,6 @@ const Result: React.FC<ResultsProps> = ({eachQuestionTimer, correctAnswer, dispa
             },
         ],
     };
-
     return (
         <div className={'text-white font-medium text-md mt-10'}>
 
