@@ -1,8 +1,10 @@
 import React from "react";
 import {Bar, Pie} from "react-chartjs-2";
-import { Chart, registerables } from 'chart.js';
+import {Chart, registerables} from 'chart.js';
 import {actionType} from "../App.tsx";
+
 Chart.register(...registerables);
+
 interface ResultsProps {
     correctAnswer: number
     wrongAnswer: number
@@ -14,15 +16,15 @@ interface ResultsProps {
         points: number
     }[]
     dispatch: (action: actionType) => void
-    eachQuestionTimer : number[]
+    eachQuestionTimer: number[]
 }
 
-const Result: React.FC<ResultsProps> = ({eachQuestionTimer,correctAnswer,dispatch, wrongAnswer, score,data}) => {
-   const totalScore=  Object.values(data).reduce((acc,val) => {
+const Result: React.FC<ResultsProps> = ({eachQuestionTimer, correctAnswer, dispatch, wrongAnswer, score, data}) => {
+    const totalScore = Object.values(data).reduce((acc, val) => {
         return acc + val.points
-    },0)
+    }, 0)
     const handleRestart = () => {
-       dispatch({type : 'res'})
+        dispatch({type: 'res'})
     }
     const data2 = {
         labels: eachQuestionTimer.map((_, index) => `Question ${index + 1}`),
@@ -71,22 +73,21 @@ const Result: React.FC<ResultsProps> = ({eachQuestionTimer,correctAnswer,dispatc
 
     return (
         <div className={'text-white font-medium text-md mt-10'}>
-            <button onClick={handleRestart} >Restart</button>
-            <div className={'flex w-1/2 gap-10 items-center'}>
-                <div>
-                    <div className={'flex gap-4'}>
-                    </div>
-            <Bar data={Bardata}/>
+
+            <div className={'flex flex-col lg:flex-row w-full lg:w-1/2 gap-10 items-center'}>
+                <div className={'w-full lg:w-1/2'}>
+                    <Bar data={Bardata}/>
                 </div>
-                <div>
-            <Pie data={Piedata}/>
+                <div className={'w-full lg:w-1/2'}>
+                    <Pie data={Piedata}/>
                 </div>
             </div>
-            <div>
+            <div className={'w-full'}>
                 <Bar data={data2} options={options}/>
             </div>
-
+            <button className={'mb-4 lg:mb-0 py-4 px-2 rounded-md bg-red-500'} onClick={handleRestart}>Restart</button>
         </div>
+
     )
 }
 

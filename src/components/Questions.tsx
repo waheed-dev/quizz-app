@@ -55,11 +55,9 @@ const Questions: React.FC<QuestionsProps> = ({data, timer, progressTrack, status
         dispatch({type: 'res'})
 
     }
-
-
     return (
-        <div className={'text-white'}>
-            <div className={' mx-auto'}>
+        <div className={'text-white px-4'}>
+            <div className={'mx-auto lg:w-1/2 xl:w-full'}>
                 <div className={'text-xl text-center  m-4 rounded-xl items-center'}>POINTS : {score} / {totalScore}
                     <div className="relative mb-5 h-5 rounded-full bg-gray-200">
                         <div className="h-5 rounded-full bg-red-500" style={{width: `${percentage}%`}}></div>
@@ -68,7 +66,7 @@ const Questions: React.FC<QuestionsProps> = ({data, timer, progressTrack, status
                     </div>
                 </div>
                 <div>
-                <p className={'text-3xl'}>{data[index].question}</p>
+                <p className={'text-lg lg:text-3xl'}>{data[index].question}</p>
                 </div>
                 {status === Status.active ? <ul className={''}>
                     {data[index].options.map((Q, index1) => {
