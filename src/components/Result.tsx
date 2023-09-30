@@ -71,12 +71,7 @@ const Result: React.FC<ResultsProps> = ({eachQuestionTimer, correctAnswer, dispa
             },
         ],
     };
-    const optionsPie = {
-        tooltips: {
-            mode: 'index',
-            enabled: false,
-        },
-    };
+
     return (
         <div className={'text-white font-medium text-md mt-10'}>
 
