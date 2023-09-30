@@ -80,7 +80,7 @@ const Result: React.FC<ResultsProps> = ({eachQuestionTimer, correctAnswer, dispa
                     <Bar data={Bardata}/>
                 </div>
                 <div className={'w-full'}>
-                    <Pie data={Piedata} options={optionsPie}/>
+                    <Pie data={Piedata}/>
                 </div>
             </div>
             <div className={'w-full'}>
