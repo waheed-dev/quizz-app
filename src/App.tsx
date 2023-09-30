@@ -128,7 +128,7 @@ function App() {
             <Header/>
             <Main>
                 {status === 'loading' ? <Loader/> : ''}
-                {status === 'error' ? <div>Error Loading Data</div> : ''}
+                {status === 'error' ? <div className={'text-2xl text-white'}>Error Loading Data</div> : ''}
                 {status === 'ready' ? <StartScreen dispatch={dispatch} data={data}/> : ''}
                 {status === 'active' || status === 'finished' ?
                     <Questions timer={timer} progressTrack={ProgressTrack} data={data} dispatch={dispatch}

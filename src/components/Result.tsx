@@ -60,17 +60,23 @@ const Result: React.FC<ResultsProps> = ({eachQuestionTimer, correctAnswer, dispa
             },
         ],
     };
+    const proportion = (score / totalScore) * 360;
     const Piedata = {
-        labels: [`Your Score ${score}`, `Total Score ${totalScore}`],
+        labels: [`Total Score ${totalScore}`,`Your Score ${score}`],
         datasets: [
             {
-                data: [score, totalScore],
-                backgroundColor: ['#FF6384', '#36A2EB'],
-                hoverBackgroundColor: ['#FF6384', '#36A2EB'],
+                data: [ 360 - proportion,proportion],
+                backgroundColor: ['#FF6384','#36A2EB',],
+                hoverBackgroundColor: ['#FF6384','#36A2EB'],
             },
         ],
     };
-
+    const optionsPie = {
+        tooltips: {
+            mode: 'index',
+            enabled: false,
+        },
+    };
     return (
         <div className={'text-white font-medium text-md mt-10'}>
 
@@ -79,7 +85,7 @@ const Result: React.FC<ResultsProps> = ({eachQuestionTimer, correctAnswer, dispa
                     <Bar data={Bardata}/>
                 </div>
                 <div className={'w-full'}>
-                    <Pie data={Piedata}/>
+                    <Pie data={Piedata} options={optionsPie}/>
                 </div>
             </div>
             <div className={'w-full'}>
